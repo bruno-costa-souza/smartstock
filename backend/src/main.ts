@@ -30,6 +30,11 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Necessário atrás de um proxy reverso (Railway, Vercel, etc.) para que
+  // req.ip reflita o IP real do cliente (via X-Forwarded-For) em vez do
+  // proxy — sem isso o rate limiting por IP fica incorreto.
+  app.set('trust proxy', 1);
+
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },

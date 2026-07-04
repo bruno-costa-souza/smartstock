@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Package, BarChart3, LogOut, BookOpen, Menu, X, Calculator } from 'lucide-react';
+import { Package, BarChart3, LogOut, BookOpen, Menu, X, Calculator, KeyRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV = [
   { to: '/admin/produtos', icon: Package, label: 'Produtos' },
   { to: '/admin/estoque', icon: BarChart3, label: 'Estoque' },
   { to: '/admin/calculadora', icon: Calculator, label: 'Calculadora' },
+  { to: '/admin/senha', icon: KeyRound, label: 'Trocar Senha' },
 ];
 
 function SidebarContent({ onClose, onLogout, userNome, userEmail }: {

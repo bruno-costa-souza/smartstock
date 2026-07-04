@@ -10,6 +10,7 @@ import { ProdutoDetalhePage } from './pages/vitrine/ProdutoDetalhePage';
 import { ProdutosAdminPage } from './pages/admin/produtos/ProdutosAdminPage';
 import { EstoquePage } from './pages/admin/estoque/EstoquePage';
 import { CalcPage } from './pages/admin/calculadora/CalcPage';
+import { TrocarSenhaPage } from './pages/admin/senha/TrocarSenhaPage';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30000 } },
@@ -57,6 +58,7 @@ export function App() {
                 <Route path="produtos" element={<ProdutosAdminPage />} />
                 <Route path="estoque" element={<EstoquePage />} />
                 <Route path="calculadora" element={<CalcPage />} />
+                <Route path="senha" element={<TrocarSenhaPage />} />
               </Route>
 
               <Route path="*" element={<Navigate to="/" replace />} />
