@@ -1,0 +1,54 @@
+# ─── Ambiente ────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Dependências ────────────────────────────────────────────
+node_modules/
+
+# ─── Build ───────────────────────────────────────────────────
+dist/
+build/
+.vite/
+
+# ─── Cobertura de testes ─────────────────────────────────────
+coverage/
+*.lcov
+
+# ─── Uploads (conteúdo de runtime, não código) ───────────────
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Docker ──────────────────────────────────────────────────
+postgres_data/
+
+# ─── Backups do banco ────────────────────────────────────────
+backend/backups/
+
+#--------------------Vault Claude
+vault/
+
+# ─── Editores / SO ───────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+
+# ─── Playwright ──────────────────────────────────────────────
+e2e/test-results/
+e2e/playwright-report/
+e2e/.auth/

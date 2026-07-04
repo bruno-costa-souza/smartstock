@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SUPERVISOR
+}
+
+enum TipoMovimentacao {
+  ENTRADA
+  SAIDA
+  AJUSTE
+}
+
+model User {
+  id           String   @id @default(uuid())
+  nome         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(ADMIN)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens  RefreshToken[]
+  passwordResets PasswordReset[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("refresh_tokens")
+}
+
+model PasswordReset {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
+}
+
+model Produto {
+  id         String   @id @default(uuid())
+  nome       String
+  descricao  String?
+  preco      Decimal  @db.Decimal(10, 2)
+  categoria  String
+  estoque    Int      @default(0)
+  estoqueMin Int      @default(5)
+  imagemUrl  String?
+  ativo      Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  movimentacoes MovimentacaoEstoque[]
+
+  @@index([categoria])
+  @@index([ativo])
+  @@map("produtos")
+}
+
+model MovimentacaoEstoque {
+  id          String           @id @default(uuid())
+  produtoId   String
+  tipo        TipoMovimentacao
+  quantidade  Int
+  motivo      String?
+  estoqueApos Int
+  createdAt   DateTime         @default(now())
+
+  produto Produto @relation(fields: [produtoId], references: [id])
+
+  @@index([produtoId, createdAt])
+  @@map("movimentacoes_estoque")
+}
