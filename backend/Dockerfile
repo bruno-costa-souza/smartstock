@@ -7,6 +7,10 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+# Placeholder só para o `prisma generate` validar o schema durante o build —
+# nunca conecta de verdade. O valor real vem das env vars da plataforma em runtime.
+ENV DATABASE_URL="postgresql://user:password@localhost:5432/db"
 RUN npx prisma generate
 RUN npm run build
 
