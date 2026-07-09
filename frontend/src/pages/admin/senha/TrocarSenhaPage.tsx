@@ -44,19 +44,19 @@ export function TrocarSenhaPage() {
   return (
     <div className="p-4 md:p-6 max-w-md">
       <div className="flex items-center gap-2 mb-5">
-        <KeyRound size={20} className="text-blue-400" />
+        <KeyRound size={20} className="text-brand-300" />
         <h1 className="text-lg md:text-xl font-bold text-white">Trocar Senha</h1>
       </div>
 
-      <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
+      <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-white/10 p-5">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1.5">Senha atual</label>
+            <label className="block text-sm text-white/60 mb-1.5">Senha atual</label>
             <input
               {...register('currentPassword')}
               type="password"
               autoComplete="current-password"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white/10 border border-white/15 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-400/60 transition-colors"
             />
             {errors.currentPassword && (
               <p className="text-red-400 text-xs mt-1">{errors.currentPassword.message}</p>
@@ -64,12 +64,12 @@ export function TrocarSenhaPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-1.5">Nova senha</label>
+            <label className="block text-sm text-white/60 mb-1.5">Nova senha</label>
             <input
               {...register('newPassword')}
               type="password"
               autoComplete="new-password"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white/10 border border-white/15 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-400/60 transition-colors"
             />
             {errors.newPassword && (
               <p className="text-red-400 text-xs mt-1">{errors.newPassword.message}</p>
@@ -77,12 +77,12 @@ export function TrocarSenhaPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-1.5">Confirmar nova senha</label>
+            <label className="block text-sm text-white/60 mb-1.5">Confirmar nova senha</label>
             <input
               {...register('confirmPassword')}
               type="password"
               autoComplete="new-password"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white/10 border border-white/15 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-400/60 transition-colors"
             />
             {errors.confirmPassword && (
               <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>
@@ -92,7 +92,7 @@ export function TrocarSenhaPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg py-2.5 text-sm font-medium transition-colors"
+            className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-glow disabled:opacity-50 text-white rounded-lg py-2.5 text-sm font-medium transition-colors"
           >
             {isSubmitting ? 'Salvando...' : 'Salvar nova senha'}
           </button>

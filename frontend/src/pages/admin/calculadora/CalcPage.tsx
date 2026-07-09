@@ -21,10 +21,10 @@ function NumInput({
 }) {
   return (
     <div>
-      <label className="block text-xs text-gray-400 mb-1 font-medium">{label}</label>
+      <label className="block text-xs text-white/60 mb-1 font-medium">{label}</label>
       <div className="relative flex items-center">
         {prefix && (
-          <span className="absolute left-3 text-gray-500 text-sm font-medium pointer-events-none">{prefix}</span>
+          <span className="absolute left-3 text-white/45 text-sm font-medium pointer-events-none">{prefix}</span>
         )}
         <input
           type="number"
@@ -32,13 +32,13 @@ function NumInput({
           step="0.01"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full py-3 bg-gray-800 border border-gray-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 transition ${prefix ? 'pl-9 pr-4' : suffix ? 'pl-4 pr-9' : 'px-4'}`}
+          className={`w-full py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm focus:outline-none focus:border-brand-400/60 transition ${prefix ? 'pl-9 pr-4' : suffix ? 'pl-4 pr-9' : 'px-4'}`}
         />
         {suffix && (
-          <span className="absolute right-3 text-gray-500 text-sm font-medium pointer-events-none">{suffix}</span>
+          <span className="absolute right-3 text-white/45 text-sm font-medium pointer-events-none">{suffix}</span>
         )}
       </div>
-      {hint && <p className="text-xs text-gray-600 mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-white/30 mt-1">{hint}</p>}
     </div>
   );
 }
@@ -59,8 +59,8 @@ function PresetChips({
           onClick={() => onChange(o.value)}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
             value === o.value
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-800 text-gray-400 border border-gray-700 hover:border-blue-500'
+              ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-glow text-white'
+              : 'bg-white/10 text-white/60 border border-white/15 hover:border-brand-400'
           }`}
         >
           {o.label}
@@ -82,7 +82,7 @@ function MarginBar({ value, max = 60 }: { value: number; max?: number }) {
     'bg-green-500';
 
   return (
-    <div className="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
+    <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
       <div
         className={`h-full rounded-full transition-all duration-500 ${color}`}
         style={{ width: `${pct}%` }}
@@ -99,10 +99,10 @@ function ResultCard({
   color?: string; large?: boolean;
 }) {
   return (
-    <div className="bg-gray-800 rounded-xl p-4 flex flex-col gap-1">
-      <p className="text-xs text-gray-400 font-medium">{label}</p>
+    <div className="bg-white/10 rounded-xl p-4 flex flex-col gap-1">
+      <p className="text-xs text-white/60 font-medium">{label}</p>
       <p className={`font-bold ${large ? 'text-2xl' : 'text-xl'} ${color}`}>{value}</p>
-      {sub && <p className="text-xs text-gray-500">{sub}</p>}
+      {sub && <p className="text-xs text-white/45">{sub}</p>}
     </div>
   );
 }
@@ -111,8 +111,8 @@ function ResultCard({
 function DeductionRow({ label, value, negative = true }: { label: string; value: number; negative?: boolean }) {
   if (value === 0) return null;
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
-      <span className="text-sm text-gray-400">{label}</span>
+    <div className="flex items-center justify-between py-2 border-b border-white/10 last:border-0">
+      <span className="text-sm text-white/60">{label}</span>
       <span className={`text-sm font-semibold ${negative ? 'text-red-400' : 'text-green-400'}`}>
         {negative ? '- ' : '+ '}{fmt(value)}
       </span>
@@ -197,10 +197,10 @@ export function CalcPage() {
 
       <div className="mb-6">
         <h1 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-          <Calculator size={22} className="text-blue-400" />
+          <Calculator size={22} className="text-brand-300" />
           Calculadora de Lucro
         </h1>
-        <p className="text-sm text-gray-400 mt-0.5">Calcule o lucro bruto e líquido dos seus produtos em tempo real</p>
+        <p className="text-sm text-white/60 mt-0.5">Calcule o lucro bruto e líquido dos seus produtos em tempo real</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -209,24 +209,24 @@ export function CalcPage() {
         <div className="space-y-5">
 
           {/* Preços */}
-          <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 space-y-4">
+          <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/10 p-5 space-y-4">
             <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-              <DollarSign size={16} className="text-blue-400" /> Preços do produto
+              <DollarSign size={16} className="text-brand-300" /> Preços do produto
             </h2>
             <NumInput label="Custo do produto (quanto você paga)" value={custo} onChange={setCusto} prefix="R$" hint="Valor pago ao fornecedor ou custo de produção" />
             <NumInput label="Preço de venda (quanto você cobra)" value={venda} onChange={setVenda} prefix="R$" />
 
             {calc && calc.markup > 0 && (
-              <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-800 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 text-xs text-white/45 bg-white/10 rounded-lg px-3 py-2">
                 <Info size={12} className="flex-shrink-0" />
-                Markup aplicado: <span className="text-blue-400 font-semibold">{pct(calc.markup)}</span>
+                Markup aplicado: <span className="text-brand-300 font-semibold">{pct(calc.markup)}</span>
                 {' '}— para cada R$ 1,00 de custo, você cobra R$ {(parseFloat(venda) / (parseFloat(custo) || 1)).toFixed(2)}
               </div>
             )}
           </div>
 
           {/* Deduções */}
-          <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 space-y-4">
+          <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/10 p-5 space-y-4">
             <button
               onClick={() => setMostrarDetalhes((v) => !v)}
               className="w-full flex items-center justify-between text-sm font-semibold text-white"
@@ -234,13 +234,13 @@ export function CalcPage() {
               <span className="flex items-center gap-2">
                 <Percent size={16} className="text-orange-400" /> Deduções (impostos e taxas)
               </span>
-              <ChevronDown size={16} className={`text-gray-500 transition-transform ${mostrarDetalhes ? 'rotate-180' : ''}`} />
+              <ChevronDown size={16} className={`text-white/45 transition-transform ${mostrarDetalhes ? 'rotate-180' : ''}`} />
             </button>
 
             {mostrarDetalhes && (
               <div className="space-y-4 pt-1">
                 <div>
-                  <p className="text-xs text-gray-400 mb-2 font-medium">Regime tributário</p>
+                  <p className="text-xs text-white/60 mb-2 font-medium">Regime tributário</p>
                   <PresetChips
                     value={imposto}
                     onChange={setImposto}
@@ -257,7 +257,7 @@ export function CalcPage() {
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-400 mb-2 font-medium">Taxa da maquininha</p>
+                  <p className="text-xs text-white/60 mb-2 font-medium">Taxa da maquininha</p>
                   <PresetChips
                     value={maquininha}
                     onChange={setMaquininha}
@@ -284,10 +284,10 @@ export function CalcPage() {
             )}
 
             {!mostrarDetalhes && (
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-white/30">
                 Imposto: {imposto || 0}% · Maquininha: {maquininha || 0}%
                 {outrosCustos ? ` · Outros: ${fmt(parseFloat(outrosCustos))}` : ''}
-                {' '}— <button onClick={() => setMostrarDetalhes(true)} className="text-blue-500 hover:underline">personalizar</button>
+                {' '}— <button onClick={() => setMostrarDetalhes(true)} className="text-brand-400 hover:underline">personalizar</button>
               </p>
             )}
           </div>
@@ -297,15 +297,15 @@ export function CalcPage() {
         <div className="space-y-5">
 
           {!calc ? (
-            <div className="bg-gray-900 rounded-2xl border border-gray-800 p-8 flex flex-col items-center justify-center text-center h-64">
-              <Calculator size={40} className="text-gray-700 mb-3" />
-              <p className="text-gray-500 text-sm">Preencha o custo e o preço de venda</p>
-              <p className="text-gray-600 text-xs mt-1">Os resultados aparecem aqui em tempo real</p>
+            <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/10 p-8 flex flex-col items-center justify-center text-center h-64">
+              <Calculator size={40} className="text-white/25 mb-3" />
+              <p className="text-white/45 text-sm">Preencha o custo e o preço de venda</p>
+              <p className="text-white/30 text-xs mt-1">Os resultados aparecem aqui em tempo real</p>
             </div>
           ) : (
             <>
               {/* Lucro bruto */}
-              <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 space-y-4">
+              <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/10 p-5 space-y-4">
                 <h2 className="text-sm font-semibold text-white flex items-center gap-2">
                   <TrendingUp size={16} className="text-green-400" /> Lucro bruto
                 </h2>
@@ -325,7 +325,7 @@ export function CalcPage() {
                   />
                 </div>
                 <div>
-                  <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+                  <div className="flex justify-between text-xs text-white/45 mb-1.5">
                     <span>Margem bruta</span>
                     <span className={`font-semibold ${marginColor(calc.margem_bruta)}`}>
                       {marginLabel(calc.margem_bruta)}
@@ -336,20 +336,20 @@ export function CalcPage() {
               </div>
 
               {/* Lucro líquido */}
-              <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 space-y-4">
+              <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/10 p-5 space-y-4">
                 <h2 className="text-sm font-semibold text-white flex items-center gap-2">
                   <TrendingDown size={16} className="text-orange-400" /> Deduções e lucro líquido
                 </h2>
 
                 {/* Breakdown */}
-                <div className="bg-gray-800/50 rounded-xl px-4 py-1">
+                <div className="bg-white/5 rounded-xl px-4 py-1">
                   <DeductionRow label={`Impostos (${imposto || 0}%)`} value={calc.val_imposto} />
                   <DeductionRow label={`Maquininha (${maquininha || 0}%)`} value={calc.val_maquininha} />
                   <DeductionRow label="Outros custos" value={calc.val_outros} />
                   {calc.total_ded === 0 && (
-                    <p className="text-xs text-gray-600 py-3 text-center">
+                    <p className="text-xs text-white/30 py-3 text-center">
                       Nenhuma dedução configurada —{' '}
-                      <button onClick={() => setMostrarDetalhes(true)} className="text-blue-500 hover:underline">
+                      <button onClick={() => setMostrarDetalhes(true)} className="text-brand-400 hover:underline">
                         adicionar
                       </button>
                     </p>
@@ -373,7 +373,7 @@ export function CalcPage() {
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+                  <div className="flex justify-between text-xs text-white/45 mb-1.5">
                     <span>Margem líquida</span>
                     <span className={`font-semibold ${marginColor(calc.margem_liquida)}`}>
                       {pct(calc.margem_liquida)}
@@ -383,24 +383,24 @@ export function CalcPage() {
                 </div>
 
                 {/* Resumo por venda */}
-                <div className="bg-gray-800 rounded-xl p-4 space-y-1">
-                  <p className="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Resumo por venda</p>
+                <div className="bg-white/10 rounded-xl p-4 space-y-1">
+                  <p className="text-xs text-white/60 mb-2 font-semibold uppercase tracking-wide">Resumo por venda</p>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Preço de venda</span>
+                    <span className="text-white/60">Preço de venda</span>
                     <span className="text-white font-medium">{fmt(calc.venda)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">— Custo do produto</span>
+                    <span className="text-white/60">— Custo do produto</span>
                     <span className="text-red-400">- {fmt(calc.custo)}</span>
                   </div>
                   {calc.total_ded > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">— Deduções totais</span>
+                      <span className="text-white/60">— Deduções totais</span>
                       <span className="text-orange-400">- {fmt(calc.total_ded)}</span>
                     </div>
                   )}
-                  <div className="border-t border-gray-700 mt-2 pt-2 flex justify-between text-sm font-bold">
-                    <span className="text-gray-300">= Lucro líquido</span>
+                  <div className="border-t border-white/15 mt-2 pt-2 flex justify-between text-sm font-bold">
+                    <span className="text-white/80">= Lucro líquido</span>
                     <span className={calc.lucro_liquido >= 0 ? 'text-green-400' : 'text-red-400'}>
                       {fmt(calc.lucro_liquido)}
                     </span>
@@ -413,16 +413,16 @@ export function CalcPage() {
       </div>
 
       {/* ── Calculadora de preço sugerido ──────────────── */}
-      <div className="mt-6 bg-gray-900 rounded-2xl border border-blue-900/40 p-5">
+      <div className="mt-6 bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-brand-500/30 p-5">
         <h2 className="text-sm font-semibold text-white flex items-center gap-2 mb-4">
-          <ArrowRight size={16} className="text-blue-400" />
+          <ArrowRight size={16} className="text-brand-300" />
           Qual preço cobrar para atingir uma margem?
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
           <NumInput label="Custo do produto (R$)" value={custoSug} onChange={setCustoSug} prefix="R$" />
           <div>
-            <p className="text-xs text-gray-400 mb-2 font-medium">Margem líquida desejada</p>
+            <p className="text-xs text-white/60 mb-2 font-medium">Margem líquida desejada</p>
             <PresetChips
               value={margemSug}
               onChange={setMargemSug}
@@ -438,20 +438,20 @@ export function CalcPage() {
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="bg-white/10 rounded-xl p-4">
             {sugerido ? (
               <>
-                <p className="text-xs text-gray-400 mb-1">Preço sugerido</p>
-                <p className="text-2xl font-bold text-blue-400">{fmt(sugerido.preco)}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-white/60 mb-1">Preço sugerido</p>
+                <p className="text-2xl font-bold text-brand-300">{fmt(sugerido.preco)}</p>
+                <p className="text-xs text-white/45 mt-1">
                   Lucro líquido por venda: <span className="text-green-400 font-semibold">{fmt(sugerido.lucro)}</span>
                 </p>
-                <p className="text-xs text-gray-600 mt-0.5">
+                <p className="text-xs text-white/30 mt-0.5">
                   Já descontando imposto ({imposto || 0}%) e maquininha ({maquininha || 0}%)
                 </p>
               </>
             ) : (
-              <p className="text-gray-600 text-sm text-center py-3">
+              <p className="text-white/30 text-sm text-center py-3">
                 Preencha o custo para ver o preço sugerido
               </p>
             )}
@@ -467,11 +467,11 @@ export function CalcPage() {
           { color: 'bg-yellow-500', label: 'Margem boa', sub: '15% – 30%' },
           { color: 'bg-green-500', label: 'Excelente', sub: '> 30%' },
         ].map((l) => (
-          <div key={l.label} className="flex items-center gap-2 bg-gray-900 rounded-xl px-3 py-2 border border-gray-800">
+          <div key={l.label} className="flex items-center gap-2 bg-white/[0.07] backdrop-blur-xl rounded-xl px-3 py-2 border border-white/10">
             <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${l.color}`} />
             <div>
               <p className="text-xs text-white font-medium leading-none">{l.label}</p>
-              <p className="text-xs text-gray-500">{l.sub}</p>
+              <p className="text-xs text-white/45">{l.sub}</p>
             </div>
           </div>
         ))}

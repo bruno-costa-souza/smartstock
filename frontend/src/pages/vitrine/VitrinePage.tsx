@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Search, ShoppingBag, BookOpen,
+  Search, ShoppingBag, Sparkles,
   ChevronLeft, ChevronRight, Menu, X, Tag,
-  ShoppingCart, Plus, Minus, Trash2, Send,
+  ShoppingCart, Plus, Minus, Trash2, Send, Check,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api';
+import { ESTOQUE_ATIVO } from '../../lib/flags';
 import { useCart } from '../../context/CartContext';
-import logo from '../../assets/images/josi-papelarias.png';
+import { BrandLogo } from '../../components/BrandLogo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const WA_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '5511943852148';
@@ -67,21 +68,23 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 
       {/* Painel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-sm backdrop-blur-2xl bg-black/50 border-l border-white/15 z-50 shadow-2xl flex flex-col transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-full max-w-sm glass-strong z-50 shadow-2xl flex flex-col transition-transform duration-300 md:rounded-l-3xl ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
         <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 flex-shrink-0">
-          <ShoppingCart size={20} className="text-emerald-400" />
-          <span className="font-bold text-white flex-1">
-            Minha reserva {count > 0 && <span className="text-emerald-400">({count})</span>}
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-glow">
+            <ShoppingCart size={17} className="text-white" />
+          </div>
+          <span className="font-display font-bold text-white flex-1">
+            Minha reserva {count > 0 && <span className="text-brand-300">({count})</span>}
           </span>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition"
+            className="w-8 h-8 flex items-center justify-center rounded-lg btn-ghost"
           >
-            <X size={18} className="text-white/70" />
+            <X size={18} />
           </button>
         </div>
 
@@ -89,7 +92,7 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center px-6 pb-20">
-              <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-2xl glass flex items-center justify-center mb-4">
                 <ShoppingCart size={28} className="text-white/30" />
               </div>
               <p className="text-white/60 font-medium">Nenhum item ainda</p>
@@ -112,7 +115,7 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-white/90 leading-snug line-clamp-2">{item.nome}</p>
-                      <p className="text-sm font-bold text-emerald-300 mt-0.5">{formatPrice(item.preco * item.quantidade)}</p>
+                      <p className="text-sm font-display font-bold text-amber-300 mt-0.5">{formatPrice(item.preco * item.quantidade)}</p>
                     </div>
 
                     {/* Qty + remove */}
@@ -149,7 +152,7 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
             {/* Total */}
             <div className="flex items-center justify-between">
               <span className="text-sm text-white/60">Total da reserva</span>
-              <span className="text-lg font-bold text-white">{formatPrice(total)}</span>
+              <span className="text-lg font-display font-bold text-white">{formatPrice(total)}</span>
             </div>
 
             {/* Nome */}
@@ -158,13 +161,13 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
               placeholder="Seu nome (opcional)"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400/50 transition"
+              className="w-full px-4 py-3 glass-input"
             />
 
             {/* Botão WhatsApp */}
             <button
               onClick={handleEnviar}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 active:scale-95 text-white font-bold py-4 rounded-2xl text-sm transition-all shadow-lg shadow-emerald-900/40"
+              className="w-full flex items-center justify-center gap-2 btn-whatsapp py-4 rounded-2xl text-sm"
             >
               <Send size={18} />
               Enviar reserva no WhatsApp
@@ -188,7 +191,7 @@ function ProdutoCard({ produto }: { produto: Produto }) {
   const navigate = useNavigate();
   const { add, isInCart } = useCart();
   const imgUrl = getImageUrl(produto.imagemUrl);
-  const semEstoque = produto.estoque === 0;
+  const semEstoque = ESTOQUE_ATIVO && produto.estoque === 0;
   const noCart = isInCart(produto.id);
 
   function handleAdd(e: React.MouseEvent) {
@@ -198,7 +201,7 @@ function ProdutoCard({ produto }: { produto: Produto }) {
 
   return (
     <div
-      className="group bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-white/15 hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer active:scale-95 flex flex-col"
+      className="group glass-card glass-card-hover hover:shadow-2xl hover:shadow-brand-900/40 hover:-translate-y-1 overflow-hidden cursor-pointer active:scale-95 flex flex-col animate-fade-up"
       onClick={() => navigate(`/produto/${produto.id}`)}
     >
       {/* Imagem */}
@@ -221,8 +224,8 @@ function ProdutoCard({ produto }: { produto: Produto }) {
           </div>
         )}
         {noCart && (
-          <div className="absolute top-2 right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-900/50">
-            <Plus size={12} className="text-white" style={{ transform: 'rotate(45deg)' }} />
+          <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-sky-400 to-blue-600 rounded-full flex items-center justify-center shadow-glow">
+            <Check size={13} className="text-white" />
           </div>
         )}
       </div>
@@ -232,8 +235,8 @@ function ProdutoCard({ produto }: { produto: Produto }) {
         <p className="text-white/90 text-sm font-medium leading-snug line-clamp-2 flex-1 mb-2">
           {produto.nome}
         </p>
-        <p className="text-emerald-300 font-bold text-base mb-2">{formatPrice(produto.preco)}</p>
-        {produto.estoque > 0 && produto.estoque <= 5 && (
+        <p className="text-amber-300 font-display font-bold text-base mb-2">{formatPrice(produto.preco)}</p>
+        {ESTOQUE_ATIVO && produto.estoque > 0 && produto.estoque <= 5 && (
           <p className="text-amber-400 text-xs mb-2">Últimas {produto.estoque} unidades</p>
         )}
 
@@ -242,8 +245,8 @@ function ProdutoCard({ produto }: { produto: Produto }) {
             onClick={handleAdd}
             className={`w-full py-2 rounded-xl text-xs font-bold transition-all ${
               noCart
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white active:scale-95 shadow-sm shadow-emerald-900/40'
+                ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
+                : 'btn-primary'
             }`}
           >
             {noCart ? '✓ Adicionado' : '+ Reservar'}
@@ -256,7 +259,7 @@ function ProdutoCard({ produto }: { produto: Produto }) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 animate-pulse">
+    <div className="glass-card overflow-hidden animate-pulse">
       <div className="aspect-square bg-white/10" />
       <div className="p-3 space-y-2">
         <div className="h-4 bg-white/10 rounded w-full" />
@@ -284,14 +287,14 @@ function CatDrawer({
         }`}
         onClick={onClose}
       />
-      <div className={`fixed top-0 left-0 h-full w-72 backdrop-blur-2xl bg-black/50 border-r border-white/15 z-50 shadow-2xl flex flex-col transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`fixed top-0 left-0 h-full w-72 glass-strong z-50 shadow-2xl flex flex-col transition-transform duration-300 rounded-r-3xl ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 flex-shrink-0">
-          <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-900/50">
-            <BookOpen size={16} className="text-white" />
+          <div className="w-9 h-9 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center shadow-glow">
+            <Tag size={16} className="text-white" />
           </div>
-          <span className="font-bold text-white flex-1">Categorias</span>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-            <X size={18} className="text-white/70" />
+          <span className="font-display font-bold text-white flex-1">Categorias</span>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg btn-ghost">
+            <X size={18} />
           </button>
         </div>
         <div className="flex-1 overflow-y-auto py-4">
@@ -303,11 +306,11 @@ function CatDrawer({
                 onClick={() => onSelect(cat === 'Todos' ? '' : cat)}
                 className={`flex items-center gap-3 w-full px-5 py-3.5 text-sm font-medium text-left transition-all ${
                   active
-                    ? 'bg-emerald-600/20 text-white border-r-4 border-emerald-500'
+                    ? 'bg-brand-600/20 text-white border-r-4 border-brand-400'
                     : 'text-white/70 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <Tag size={14} className={active ? 'text-emerald-400' : 'text-white/40'} />
+                <Tag size={14} className={active ? 'text-brand-300' : 'text-white/40'} />
                 {cat}
               </button>
             );
@@ -327,7 +330,7 @@ export function VitrinePage() {
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const catsRef = useRef<HTMLDivElement>(null);
-  const { count } = useCart();
+  const { count, total: cartTotal } = useCart();
 
   const { data: categorias = [] } = useQuery<string[]>({
     queryKey: ['vitrine', 'categorias'],
@@ -361,40 +364,40 @@ export function VitrinePage() {
     <div className="min-h-screen">
 
       {/* ── Header ──────────────────────────────────────── */}
-      <header className="backdrop-blur-xl bg-white/10 border-b border-white/10 sticky top-0 z-30 shadow-lg shadow-black/30">
+      <header className="glass-strong border-x-0 border-t-0 sticky top-0 z-30 shadow-lg shadow-black/30">
 
         {/* Mobile */}
         <div className="md:hidden">
-          <div className="flex items-center gap-2 px-4 py-2">
+          <div className="flex items-center gap-2 px-3 py-3">
             <button
               onClick={() => setCatDrawerOpen(true)}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition"
+              className="w-10 h-10 flex items-center justify-center rounded-xl btn-ghost"
             >
-              <Menu size={22} className="text-white/80" />
+              <Menu size={20} />
             </button>
-            <div className="flex items-center flex-1">
-              <img src={logo} alt="Josi Papelarias" className="h-20 w-auto object-contain" />
+            <div className="flex items-center justify-center flex-1">
+              <BrandLogo size="sm" />
             </div>
             <button
               onClick={() => setMobileSearchOpen((v) => !v)}
               className={`w-10 h-10 flex items-center justify-center rounded-xl transition ${
-                mobileSearchOpen ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/70 bg-white/10 hover:bg-white/20'
+                mobileSearchOpen ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30' : 'btn-ghost'
               }`}
             >
-              <Search size={20} />
+              <Search size={19} />
             </button>
             {/* Carrinho mobile */}
-            <button onClick={() => setCartOpen(true)} className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition">
-              <ShoppingCart size={20} className="text-white/80" />
+            <button onClick={() => setCartOpen(true)} className="relative w-10 h-10 flex items-center justify-center rounded-xl btn-ghost">
+              <ShoppingCart size={19} />
               {count > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-emerald-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1 -right-1 w-[18px] h-[18px] bg-gradient-to-br from-sky-400 to-blue-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-glow">
                   {count > 9 ? '9+' : count}
                 </span>
               )}
             </button>
           </div>
           {mobileSearchOpen && (
-            <div className="px-4 pb-3">
+            <div className="px-3 pb-3 animate-fade-in">
               <div className="relative">
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
                 <input
@@ -403,7 +406,7 @@ export function VitrinePage() {
                   placeholder="Buscar produtos..."
                   value={search}
                   onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                  className="w-full pl-9 pr-9 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400/50 transition"
+                  className="w-full pl-9 pr-9 py-3 glass-input"
                 />
                 {search && (
                   <button
@@ -416,46 +419,45 @@ export function VitrinePage() {
               </div>
             </div>
           )}
-          {categoria && (
-            <div className="px-4 pb-3">
-              <button
-                onClick={() => selectCategoria('')}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
-              >
-                {categoria} <X size={11} />
-              </button>
-            </div>
-          )}
+          {/* Pílulas de categoria — mobile */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar px-3 pb-3">
+            {['Todos', ...categorias].map((cat) => {
+              const active = cat === 'Todos' ? !categoria : categoria === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => selectCategoria(cat === 'Todos' ? '' : cat)}
+                  className={`pill ${active ? 'pill-active' : 'pill-idle'}`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Desktop */}
-        <div className="hidden md:block max-w-5xl mx-auto px-4 py-3 space-y-3">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Josi Papelarias" className="h-24 w-auto object-contain" />
-            <div className="flex-1" />
+        <div className="hidden md:block max-w-5xl mx-auto px-4 py-4 space-y-4">
+          <div className="flex items-center gap-4">
+            <BrandLogo size="md" />
+            <div className="relative flex-1 max-w-xl mx-auto">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Buscar produtos..."
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                className="w-full pl-9 pr-4 py-2.5 glass-input"
+              />
+            </div>
             {/* Carrinho desktop */}
             <button
               onClick={() => setCartOpen(true)}
-              className="relative flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-emerald-900/40 active:scale-95"
+              className="relative flex items-center gap-2 btn-primary px-4 py-2.5 rounded-xl text-sm"
             >
               <ShoppingCart size={16} />
               {count > 0 ? `${count} item${count > 1 ? 's' : ''}` : 'Reserva'}
-              {count > 0 && (
-                <span className="w-5 h-5 bg-emerald-400 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
-                  {count}
-                </span>
-              )}
             </button>
-          </div>
-          <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Buscar produtos..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400/50 transition"
-            />
           </div>
         </div>
 
@@ -463,22 +465,18 @@ export function VitrinePage() {
         <div className="hidden md:flex items-center gap-1 max-w-5xl mx-auto px-4 pb-3">
           <button
             onClick={() => scrollCats(-1)}
-            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/10 border border-white/15 hover:bg-white/20 transition"
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full btn-ghost"
           >
-            <ChevronLeft size={14} className="text-white/70" />
+            <ChevronLeft size={14} />
           </button>
-          <div ref={catsRef} className="flex gap-2 overflow-x-auto pb-0.5 flex-1" style={{ scrollbarWidth: 'none' }}>
+          <div ref={catsRef} className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5 flex-1">
             {['Todos', ...categorias].map((cat) => {
               const active = cat === 'Todos' ? !categoria : categoria === cat;
               return (
                 <button
                   key={cat}
                   onClick={() => selectCategoria(cat === 'Todos' ? '' : cat)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                    active
-                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-900/30'
-                      : 'bg-white/10 border border-white/15 text-white/70 hover:bg-white/20 hover:text-white hover:border-white/25'
-                  }`}
+                  className={`pill ${active ? 'pill-active' : 'pill-idle'}`}
                 >
                   {cat}
                 </button>
@@ -487,9 +485,9 @@ export function VitrinePage() {
           </div>
           <button
             onClick={() => scrollCats(1)}
-            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/10 border border-white/15 hover:bg-white/20 transition"
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full btn-ghost"
           >
-            <ChevronRight size={14} className="text-white/70" />
+            <ChevronRight size={14} />
           </button>
         </div>
       </header>
@@ -506,6 +504,26 @@ export function VitrinePage() {
 
       {/* Conteúdo */}
       <main className="max-w-5xl mx-auto px-3 md:px-4 py-4 md:py-6">
+
+        {/* Faixa de boas-vindas */}
+        {!search && !categoria && page === 1 && (
+          <div className="glass-card relative overflow-hidden px-5 py-5 md:px-8 md:py-4 mb-5 animate-fade-up">
+            <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-brand-500/20 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-12 -left-8 w-36 h-36 rounded-full bg-violet-500/20 blur-3xl pointer-events-none" />
+            <div className="relative flex items-center gap-3">
+              <Sparkles size={20} className="text-yellow-200 flex-shrink-0 hidden sm:block" />
+              <div>
+                <h1 className="font-display font-bold text-lg md:text-2xl text-white leading-tight">
+                  Papelaria &amp; presentes com carinho
+                </h1>
+                <p className="text-white/60 text-xs md:text-sm mt-1">
+                  Escolha seus produtos, reserve pelo WhatsApp e retire na loja. Simples assim. ✨
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {!isLoading && total > 0 && (
           <p className="text-xs text-white/40 mb-3">
             {total} produto{total !== 1 ? 's' : ''}{categoria && ` em ${categoria}`}{search && ` para "${search}"`}
@@ -518,14 +536,14 @@ export function VitrinePage() {
           </div>
         ) : produtos.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-20 h-20 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center mb-4 backdrop-blur-sm">
+            <div className="w-20 h-20 rounded-2xl glass flex items-center justify-center mb-4">
               <ShoppingBag size={36} className="text-white/30" />
             </div>
             <p className="text-white/70 font-semibold text-base mb-1">Nenhum produto encontrado</p>
             {(search || categoria) && (
               <button
                 onClick={() => { setSearch(''); setCategoria(''); setPage(1); }}
-                className="mt-3 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition"
+                className="mt-3 text-brand-300 hover:text-brand-200 text-sm font-medium transition"
               >
                 Limpar filtros
               </button>
@@ -542,18 +560,16 @@ export function VitrinePage() {
             <button
               disabled={page === 1}
               onClick={() => { setPage((p) => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm disabled:opacity-30 hover:bg-white/20 transition"
+              className="w-10 h-10 flex items-center justify-center rounded-xl btn-ghost disabled:opacity-30"
             >
-              <ChevronLeft size={18} className="text-white/70" />
+              <ChevronLeft size={18} />
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
               <button
                 key={n}
                 onClick={() => { setPage(n); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className={`w-10 h-10 rounded-xl text-sm font-bold transition ${
-                  n === page
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
-                    : 'bg-white/10 border border-white/15 text-white/70 hover:bg-white/20 hover:text-white backdrop-blur-sm'
+                  n === page ? 'btn-primary' : 'btn-ghost'
                 }`}
               >
                 {n}
@@ -562,16 +578,39 @@ export function VitrinePage() {
             <button
               disabled={page === totalPages}
               onClick={() => { setPage((p) => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm disabled:opacity-30 hover:bg-white/20 transition"
+              className="w-10 h-10 flex items-center justify-center rounded-xl btn-ghost disabled:opacity-30"
             >
-              <ChevronRight size={18} className="text-white/70" />
+              <ChevronRight size={18} />
             </button>
           </div>
         )}
       </main>
 
-      <footer className="text-center py-8 text-xs text-white/30 border-t border-white/10 mt-4">
-        Papelaria &copy; {new Date().getFullYear()} — materiais escolares e de escritório
+      {/* ── Barra flutuante da reserva (mobile) ─────────── */}
+      {count > 0 && !cartOpen && (
+        <div className="md:hidden fixed bottom-4 inset-x-3 z-30 animate-fade-up">
+          <button
+            onClick={() => setCartOpen(true)}
+            className="w-full flex items-center justify-between glass-strong rounded-2xl px-5 py-4 shadow-2xl shadow-black/50 active:scale-[0.98] transition"
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold text-white">
+              <span className="w-6 h-6 bg-gradient-to-br from-sky-400 to-blue-600 rounded-full flex items-center justify-center text-[11px] font-bold shadow-glow">
+                {count > 9 ? '9+' : count}
+              </span>
+              Ver minha reserva
+            </span>
+            <span className="font-display font-bold text-amber-300">{formatPrice(cartTotal)}</span>
+          </button>
+        </div>
+      )}
+
+      <footer className="border-t border-white/10 mt-6">
+        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col items-center gap-3 text-center">
+          <BrandLogo size="sm" />
+          <p className="text-xs text-white/30">
+            Materiais escolares, de escritório e presentes &copy; {new Date().getFullYear()}
+          </p>
+        </div>
       </footer>
     </div>
   );

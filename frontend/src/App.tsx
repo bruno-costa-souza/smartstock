@@ -11,6 +11,7 @@ import { ProdutosAdminPage } from './pages/admin/produtos/ProdutosAdminPage';
 import { EstoquePage } from './pages/admin/estoque/EstoquePage';
 import { CalcPage } from './pages/admin/calculadora/CalcPage';
 import { TrocarSenhaPage } from './pages/admin/senha/TrocarSenhaPage';
+import { ESTOQUE_ATIVO } from './lib/flags';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30000 } },
@@ -21,8 +22,8 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -33,6 +34,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <div className="bg-blobs" aria-hidden />
       <AuthProvider>
         <ToastProvider>
           <CartProvider>
@@ -56,7 +58,7 @@ export function App() {
               >
                 <Route index element={<Navigate to="/admin/produtos" replace />} />
                 <Route path="produtos" element={<ProdutosAdminPage />} />
-                <Route path="estoque" element={<EstoquePage />} />
+                {ESTOQUE_ATIVO && <Route path="estoque" element={<EstoquePage />} />}
                 <Route path="calculadora" element={<CalcPage />} />
                 <Route path="senha" element={<TrocarSenhaPage />} />
               </Route>

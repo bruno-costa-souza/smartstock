@@ -78,7 +78,7 @@ export function EstoquePage() {
       <div className="flex items-start justify-between gap-3 mb-5">
         <div>
           <h1 className="text-lg md:text-xl font-bold text-white">Estoque</h1>
-          <p className="text-sm text-gray-400 mt-0.5">Controle de entradas e saídas</p>
+          <p className="text-sm text-white/60 mt-0.5">Controle de entradas e saídas</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
           <button
@@ -100,15 +100,15 @@ export function EstoquePage() {
 
       {/* Cards de resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-xs mb-2"><Package size={14} /> Total de produtos</div>
+        <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-white/10 p-4">
+          <div className="flex items-center gap-2 text-white/60 text-xs mb-2"><Package size={14} /> Total de produtos</div>
           <p className="text-2xl font-bold text-white">{resumo?.total ?? '—'}</p>
         </div>
-        <div className="bg-gray-900 rounded-xl border border-yellow-900/40 p-4">
+        <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-yellow-900/40 p-4">
           <div className="flex items-center gap-2 text-yellow-400 text-xs mb-2"><AlertTriangle size={14} /> Baixo estoque</div>
           <p className="text-2xl font-bold text-yellow-400">{resumo?.baixoEstoque.length ?? '—'}</p>
         </div>
-        <div className="bg-gray-900 rounded-xl border border-red-900/40 p-4">
+        <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-red-900/40 p-4">
           <div className="flex items-center gap-2 text-red-400 text-xs mb-2"><AlertTriangle size={14} /> Sem estoque</div>
           <p className="text-2xl font-bold text-red-400">{resumo?.semEstoque.length ?? '—'}</p>
         </div>
@@ -117,14 +117,14 @@ export function EstoquePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Alertas de estoque */}
         {(resumo?.semEstoque.length || 0) + (resumo?.baixoEstoque.length || 0) > 0 && (
-          <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
+          <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-white/10 p-4">
             <h2 className="text-sm font-semibold text-white mb-3">Alertas de estoque</h2>
             <div className="space-y-2">
               {[...(resumo?.semEstoque ?? []), ...(resumo?.baixoEstoque ?? [])].map((p) => (
-                <div key={p.id} className="flex items-center justify-between p-2 rounded-lg bg-gray-800">
+                <div key={p.id} className="flex items-center justify-between p-2 rounded-lg bg-white/10">
                   <div>
                     <p className="text-sm text-white">{p.nome}</p>
-                    <p className="text-xs text-gray-500">{p.categoria}</p>
+                    <p className="text-xs text-white/45">{p.categoria}</p>
                   </div>
                   <span className={`text-sm font-bold ${p.estoque === 0 ? 'text-red-400' : 'text-yellow-400'}`}>
                     {p.estoque} un
@@ -136,13 +136,13 @@ export function EstoquePage() {
         )}
 
         {/* Histórico */}
-        <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-800">
+        <div className="bg-white/[0.07] backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10">
             <h2 className="text-sm font-semibold text-white">Últimas movimentações</h2>
           </div>
-          <div className="divide-y divide-gray-800">
+          <div className="divide-y divide-white/10">
             {movimentos.length === 0 ? (
-              <p className="text-center text-gray-500 text-sm py-8">Nenhuma movimentação ainda</p>
+              <p className="text-center text-white/45 text-sm py-8">Nenhuma movimentação ainda</p>
             ) : (
               movimentos.map((m) => (
                 <div key={m.id} className="flex items-center gap-3 px-4 py-3">
@@ -151,13 +151,13 @@ export function EstoquePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white truncate">{m.produto.nome}</p>
-                    <p className="text-xs text-gray-500">{m.motivo || m.tipo} · estoque: {m.estoqueApos}</p>
+                    <p className="text-xs text-white/45">{m.motivo || m.tipo} · estoque: {m.estoqueApos}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className={`text-sm font-bold ${m.tipo === 'ENTRADA' ? 'text-green-400' : 'text-red-400'}`}>
                       {m.tipo === 'ENTRADA' ? '+' : '-'}{m.quantidade}
                     </p>
-                    <p className="text-xs text-gray-600">{new Date(m.createdAt).toLocaleDateString('pt-BR')}</p>
+                    <p className="text-xs text-white/30">{new Date(m.createdAt).toLocaleDateString('pt-BR')}</p>
                   </div>
                 </div>
               ))
@@ -169,20 +169,20 @@ export function EstoquePage() {
       {/* Modal entrada/saída */}
       {modal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl border border-gray-800 w-full max-w-md">
-            <div className="flex items-center justify-between p-5 border-b border-gray-800">
+          <div className="bg-[#101631]/90 backdrop-blur-2xl rounded-2xl border border-white/10 w-full max-w-md">
+            <div className="flex items-center justify-between p-5 border-b border-white/10">
               <h2 className={`font-semibold ${modal === 'ENTRADA' ? 'text-green-400' : 'text-red-400'}`}>
                 {modal === 'ENTRADA' ? 'Registrar Entrada' : 'Registrar Saída'}
               </h2>
-              <button onClick={() => setModal(null)} className="p-1 hover:bg-gray-800 rounded-lg text-gray-400"><X size={18} /></button>
+              <button onClick={() => setModal(null)} className="p-1 hover:bg-white/10 rounded-lg text-white/60"><X size={18} /></button>
             </div>
             <div className="p-5 space-y-4">
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Produto *</label>
+                <label className="block text-xs text-white/60 mb-1">Produto *</label>
                 <select
                   value={produtoId}
                   onChange={(e) => setProdutoId(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white focus:outline-none focus:border-brand-400/60"
                 >
                   <option value="">Selecione um produto...</option>
                   {(resumo?.produtos ?? []).map((p) => (
@@ -191,28 +191,28 @@ export function EstoquePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Quantidade *</label>
+                <label className="block text-xs text-white/60 mb-1">Quantidade *</label>
                 <input
                   type="number"
                   min="1"
                   value={quantidade}
                   onChange={(e) => setQuantidade(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white focus:outline-none focus:border-brand-400/60"
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Motivo (opcional)</label>
+                <label className="block text-xs text-white/60 mb-1">Motivo (opcional)</label>
                 <input
                   type="text"
                   value={motivo}
                   onChange={(e) => setMotivo(e.target.value)}
                   placeholder={modal === 'ENTRADA' ? 'Ex: Compra fornecedor' : 'Ex: Venda balcão'}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:border-brand-400/60"
                 />
               </div>
             </div>
-            <div className="flex gap-3 p-5 border-t border-gray-800">
-              <button onClick={() => setModal(null)} className="flex-1 py-2 rounded-lg border border-gray-700 text-sm text-gray-400 hover:bg-gray-800 transition-colors">Cancelar</button>
+            <div className="flex gap-3 p-5 border-t border-white/10">
+              <button onClick={() => setModal(null)} className="flex-1 py-2 rounded-lg border border-white/15 text-sm text-white/60 hover:bg-white/10 transition-colors">Cancelar</button>
               <button
                 onClick={() => movMutation.mutate()}
                 disabled={movMutation.isPending || !produtoId || !quantidade}

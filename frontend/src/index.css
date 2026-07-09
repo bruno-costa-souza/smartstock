@@ -9,12 +9,20 @@
 
   body {
     @apply antialiased min-h-screen text-white;
+    background-color: #0b0f24;
+  }
+
+  /* Fundo em camada fixa (background-attachment: fixed buga no iOS) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
     background:
-      radial-gradient(ellipse at 15% 0%,   rgba(124, 58, 237, 0.30) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 15%,  rgba(37,  99, 235, 0.25) 0%, transparent 55%),
-      radial-gradient(ellipse at 50% 90%,  rgba(109, 40, 217, 0.20) 0%, transparent 55%),
-      linear-gradient(160deg, #0d0b1e 0%, #0f1633 45%, #0b0d26 75%, #120a2a 100%);
-    background-attachment: fixed;
+      radial-gradient(ellipse at 15% 0%,   rgba(27, 110, 245, 0.28) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%,  rgba(56, 152, 255, 0.20) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 95%,  rgba(251, 191, 36, 0.07) 0%, transparent 55%),
+      linear-gradient(160deg, #0b0f24 0%, #101736 45%, #0b1130 75%, #0d1230 100%);
   }
 
   * {
@@ -38,4 +46,113 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.28);
   }
+}
+
+@layer components {
+  /* ── Superfícies glass ─────────────────────────────── */
+  .glass {
+    @apply bg-white/[0.07] backdrop-blur-xl border border-white/10;
+  }
+
+  .glass-card {
+    @apply bg-white/[0.07] backdrop-blur-xl border border-white/10 rounded-2xl shadow-glass;
+  }
+
+  .glass-card-hover {
+    @apply hover:bg-white/[0.12] hover:border-white/20 transition-all duration-300;
+  }
+
+  .glass-strong {
+    @apply bg-[#101631]/80 backdrop-blur-2xl border border-white/15;
+  }
+
+  .glass-input {
+    @apply bg-white/[0.07] border border-white/15 rounded-xl text-white text-sm placeholder-white/40
+      focus:outline-none focus:ring-2 focus:ring-brand-400/40 focus:border-brand-400/60 transition;
+  }
+
+  /* ── Botões ────────────────────────────────────────── */
+  .btn-primary {
+    @apply bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500
+      text-white font-semibold shadow-glow active:scale-95 transition-all;
+  }
+
+  .btn-whatsapp {
+    @apply bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400
+      text-white font-bold shadow-glow-emerald active:scale-95 transition-all;
+  }
+
+  .btn-ghost {
+    @apply bg-white/[0.08] border border-white/15 text-white/70
+      hover:bg-white/[0.15] hover:text-white hover:border-white/25 transition;
+  }
+
+  /* Pílula de categoria/filtro */
+  .pill {
+    @apply flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all;
+  }
+
+  .pill-active {
+    @apply bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-glow;
+  }
+
+  .pill-idle {
+    @apply bg-white/[0.08] border border-white/15 text-white/70 hover:bg-white/[0.15] hover:text-white;
+  }
+}
+
+/* ── Blobs decorativos animados (atrás de tudo) ──────── */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-blobs::before,
+.bg-blobs::after {
+  content: '';
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.bg-blobs::before {
+  width: 45vw;
+  height: 45vw;
+  min-width: 320px;
+  min-height: 320px;
+  top: -12%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(51, 143, 255, 0.28), transparent 65%);
+  animation: float 18s ease-in-out infinite;
+}
+
+.bg-blobs::after {
+  width: 40vw;
+  height: 40vw;
+  min-width: 280px;
+  min-height: 280px;
+  bottom: -15%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.10), transparent 65%);
+  animation: float-alt 22s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-blobs::before,
+  .bg-blobs::after {
+    animation: none;
+  }
+}
+
+/* Esconde scrollbar em carrosséis horizontais */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

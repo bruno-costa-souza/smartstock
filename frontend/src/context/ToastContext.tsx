@@ -27,10 +27,10 @@ const icons: Record<ToastType, React.ReactNode> = {
 };
 
 const styles: Record<ToastType, string> = {
-  success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-  error: 'bg-red-500/10 border-red-500/30 text-red-400',
-  warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-  info: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
+  success: 'border-emerald-500/30 text-emerald-300 shadow-emerald-950/40',
+  error: 'border-red-500/30 text-red-300 shadow-red-950/40',
+  warning: 'border-amber-500/30 text-amber-300 shadow-amber-950/40',
+  info: 'border-brand-500/30 text-brand-300 shadow-brand-950/40',
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -57,12 +57,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       {/* Toast container */}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-80">
+      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]">
         {toasts.map((t) => (
           <div
             key={t.id}
             className={clsx(
-              'flex items-start gap-3 px-4 py-3 rounded-xl border text-sm shadow-lg',
+              'flex items-start gap-3 px-4 py-3 rounded-xl border text-sm shadow-xl',
+              'bg-[#101631]/85 backdrop-blur-2xl animate-fade-up',
               styles[t.type],
             )}
           >

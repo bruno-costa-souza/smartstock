@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Package, BarChart3, LogOut, BookOpen, Menu, X, Calculator, KeyRound } from 'lucide-react';
+import { Package, BarChart3, LogOut, Menu, X, Calculator, KeyRound, Store } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { ESTOQUE_ATIVO } from '../../lib/flags';
+import { BrandMark } from '../BrandLogo';
 
 const NAV = [
   { to: '/admin/produtos', icon: Package, label: 'Produtos' },
   { to: '/admin/estoque', icon: BarChart3, label: 'Estoque' },
   { to: '/admin/calculadora', icon: Calculator, label: 'Calculadora' },
   { to: '/admin/senha', icon: KeyRound, label: 'Trocar Senha' },
-];
+].filter((item) => ESTOQUE_ATIVO || item.to !== '/admin/estoque');
 
 function SidebarContent({ onClose, onLogout, userNome, userEmail }: {
   onClose?: () => void;
@@ -17,17 +19,16 @@ function SidebarContent({ onClose, onLogout, userNome, userEmail }: {
   userEmail?: string;
 }) {
   return (
-    <div className="flex flex-col h-full bg-gray-900">
+    <div className="flex flex-col h-full glass-strong border-y-0 border-l-0">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-800 flex-shrink-0">
-        <BookOpen size={20} className="text-blue-400 flex-shrink-0" />
-        <span className="font-bold text-white text-sm flex-1">Papelaria Admin</span>
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10 flex-shrink-0">
+        <BrandMark className="flex-1" />
         {onClose && (
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-800 transition"
+            className="w-7 h-7 flex items-center justify-center rounded-lg btn-ghost"
           >
-            <X size={16} className="text-gray-400" />
+            <X size={16} />
           </button>
         )}
       </div>
@@ -40,10 +41,10 @@ function SidebarContent({ onClose, onLogout, userNome, userEmail }: {
             to={to}
             onClick={onClose}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-glow'
+                  : 'text-white/60 hover:bg-white/10 hover:text-white'
               }`
             }
           >
@@ -51,17 +52,24 @@ function SidebarContent({ onClose, onLogout, userNome, userEmail }: {
             {label}
           </NavLink>
         ))}
+        <NavLink
+          to="/"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/60 hover:bg-white/10 hover:text-white transition-all"
+        >
+          <Store size={18} />
+          Ver loja
+        </NavLink>
       </nav>
 
       {/* Footer */}
-      <div className="p-3 border-t border-gray-800">
+      <div className="p-3 border-t border-white/10">
         <div className="px-4 py-2 mb-1">
-          <p className="text-xs text-gray-400 font-medium truncate">{userNome}</p>
-          <p className="text-xs text-gray-600 truncate">{userEmail}</p>
+          <p className="text-xs text-white/60 font-medium truncate">{userNome}</p>
+          <p className="text-xs text-white/30 truncate">{userEmail}</p>
         </div>
         <button
           onClick={onLogout}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-red-400 transition-colors"
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-white/60 hover:bg-red-500/10 hover:text-red-400 transition-colors"
         >
           <LogOut size={18} />
           Sair
@@ -82,23 +90,22 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row">
 
       {/* ── Mobile: top bar ─────────────────────────────── */}
-      <div className="md:hidden flex items-center gap-3 px-4 h-14 bg-gray-900 border-b border-gray-800 flex-shrink-0">
+      <div className="md:hidden flex items-center gap-3 px-4 h-14 glass-strong border-x-0 border-t-0 sticky top-0 z-30 flex-shrink-0">
         <button
           onClick={() => setDrawerOpen(true)}
-          className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-800 transition"
+          className="w-9 h-9 flex items-center justify-center rounded-xl btn-ghost"
         >
-          <Menu size={20} className="text-gray-300" />
+          <Menu size={19} />
         </button>
-        <BookOpen size={18} className="text-blue-400 flex-shrink-0" />
-        <span className="font-bold text-white text-sm flex-1">Papelaria Admin</span>
+        <BrandMark className="flex-1" />
         <button
           onClick={handleLogout}
-          className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-800 transition"
+          className="w-9 h-9 flex items-center justify-center rounded-xl btn-ghost hover:text-red-400"
         >
-          <LogOut size={18} className="text-gray-400" />
+          <LogOut size={17} />
         </button>
       </div>
 
@@ -106,7 +113,7 @@ export function AdminLayout() {
       {drawerOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/60 z-40 md:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
             onClick={() => setDrawerOpen(false)}
           />
           <div className="fixed top-0 left-0 h-full w-64 z-50 md:hidden shadow-2xl">
@@ -121,7 +128,7 @@ export function AdminLayout() {
       )}
 
       {/* ── Desktop: sidebar fixa ────────────────────────── */}
-      <aside className="hidden md:flex md:w-56 md:flex-col md:flex-shrink-0 border-r border-gray-800">
+      <aside className="hidden md:flex md:w-56 md:flex-col md:flex-shrink-0">
         <SidebarContent
           onLogout={handleLogout}
           userNome={user?.nome}
