@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 
 @Injectable()
 export class ProdutosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cloudinary: CloudinaryService,
+  ) {}
 
   async findAll(
     page = 1,
@@ -47,9 +51,12 @@ export class ProdutosService {
     return this.prisma.produto.update({ where: { id }, data: dto });
   }
 
-  async updateImagem(id: string, imagemUrl: string) {
-    await this.findOne(id);
-    return this.prisma.produto.update({ where: { id }, data: { imagemUrl } });
+  async updateImagem(id: string, buffer: Buffer) {
+    const produto = await this.findOne(id);
+    const imagemUrl = await this.cloudinary.upload(buffer);
+    const atualizado = await this.prisma.produto.update({ where: { id }, data: { imagemUrl } });
+    await this.cloudinary.removeByUrl(produto.imagemUrl);
+    return atualizado;
   }
 
   async remove(id: string) {

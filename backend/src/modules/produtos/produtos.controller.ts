@@ -1,5 +1,5 @@
 import {
-  Body, Controller, DefaultValuePipe, Delete, Get, Param,
+  BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, Param,
   ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -57,8 +57,9 @@ export class ProdutosController {
     schema: { type: 'object', properties: { imagem: { type: 'string', format: 'binary' } } },
   })
   @UseInterceptors(FileInterceptor('imagem'))
-  uploadImagem(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    return this.produtosService.updateImagem(id, `/uploads/${file.filename}`);
+  uploadImagem(@Param('id') id: string, @UploadedFile() file?: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Arquivo de imagem obrigatório (campo "imagem")');
+    return this.produtosService.updateImagem(id, file.buffer);
   }
 
   @Delete(':id')

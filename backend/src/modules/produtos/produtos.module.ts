@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { memoryStorage } from 'multer';
+import { extname } from 'path';
+import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
 import { ProdutosController } from './produtos.controller';
 import { ProdutosService } from './produtos.service';
 
 @Module({
   imports: [
+    CloudinaryModule,
     MulterModule.register({
-      storage: diskStorage({
-        destination: join(process.cwd(), 'uploads'),
-        filename: (_req, file, cb) => {
-          const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-          cb(null, `${unique}${extname(file.originalname)}`);
-        },
-      }),
+      // Em memória: o arquivo é repassado ao Cloudinary, nunca gravado em
+      // disco (o filesystem do Railway é efêmero e some a cada deploy).
+      storage: memoryStorage(),
       fileFilter: (_req, file, cb) => {
         const validMimetype = file.mimetype.match(/^image\/(jpg|jpeg|png|gif|webp)$/);
         const validExtension = extname(file.originalname).toLowerCase().match(/^\.(jpg|jpeg|png|gif|webp)$/);
